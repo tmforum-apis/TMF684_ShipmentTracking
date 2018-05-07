@@ -1,5 +1,5 @@
 {
-  "basePath": "/trackings/v1",
+  "basePath": "/shipmentTracking/v1",
   "definitions": {
     "TrackingRequestType": {
       "properties": {
@@ -57,7 +57,10 @@
         },
         "order": {
           "description": "Order that triggered this shipment",
-          "$ref": "#/definitions/OrderRefType"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderRefType"
+          }
         }
       },
       "required": [
@@ -131,7 +134,10 @@
         },
         "order": {
           "description": "Order that triggered this shipment",
-          "$ref": "#/definitions/OrderRefType"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderRefType"
+          }
         }
       },
       "required": [
@@ -158,9 +164,9 @@
           "type": "string",
           "description": "Screen name of the order"
         },
-        "description": {
+        "@referredType": {
           "type": "string",
-          "description": "Description of the order"
+          "description": "Type of the referred order in case it is polymorphic"
         }
       },
       "required": [
@@ -189,7 +195,7 @@
         },
         "streetName": {
           "type": "string",
-          "description": "Name of the street (e.g.: Gran VÃ­a)"
+          "description": "Name of the street (e.g.: Gran Vía)"
         },
         "streetType": {
           "type": "string",
@@ -219,12 +225,19 @@
           "type": "string",
           "description": "Country"
         },
+        "@type": {
+          "type": "string",
+          "description": "type of address"
+        },
+        "@schemaLocation": {
+          "type": "string",
+          "description": "Where to find a schema for the polymorphic types definitions"
+        },
         "geographicLocation": {
           "$ref": "#/definitions/GeographicLocationType"
         },
-        "subAddress": {
-          "$ref": "#/definitions/SubAddressType",
-          "description": "Latitude and longitude"
+        "geographicSubAddress": {
+          "$ref": "#/definitions/SubAddressType"
         }
       },
       "required": [
@@ -263,6 +276,18 @@
           },
           "description": "A list of geo points (GeographicPoint [*]). A GeoPoint defines a geographic point through coordinates"
         },
+        "accuracy": {
+          "type": "string",
+          "description": "Accuracy of the coordinate specified"
+        },
+        "spatialRef": {
+          "type": "string",
+          "description": "Geocoding referential"
+        },
+        "@baseType": {
+          "type": "string",
+          "description": "Geographic Location base type"
+        },
         "@type": {
           "type": "string",
           "description": "Indicates the type of the resource for extensibility purposes"
@@ -279,14 +304,6 @@
     },
     "GeographicPointType": {
       "properties": {
-        "accuracy": {
-          "type": "string",
-          "description": "Accuracy of the coordinate specified"
-        },
-        "spatialRef": {
-          "type": "string",
-          "description": "Geocoding referential"
-        },
         "x": {
           "type": "string",
           "description": "x coordinate (usually latitude)"
@@ -403,7 +420,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/tracking": {
+    "/shipmentTracking": {
       "get": {
         "operationId": "retrieveTrackings",
         "produces": [
@@ -461,7 +478,7 @@
         ]
       }
     },
-    "/tracking/{trackingId}": {
+    "/shipmentTracking/{trackingId}": {
       "get": {
         "operationId": "retrieveTracking",
         "produces": [
@@ -550,7 +567,7 @@
         ]
       }
     },
-    "/tracking/{trackingId}/checkpoint": {
+    "/shipmentTracking/{trackingId}/checkpoint": {
       "post": {
         "operationId": "createTrackingCheckpoint",
         "produces": [
